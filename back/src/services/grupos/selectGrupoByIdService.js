@@ -9,7 +9,7 @@ const selectGrupoByIdService = async (idGrupo) => {
             SELECT 
                 G.id,
                 G.nombre,
-                (SELECT provincia FROM provincias WHERE provincias.id = G.provincia) AS Provincia,
+                (SELECT provincia FROM provincias WHERE provincias.id = G.provincia) AS provincia,
                 (SELECT id FROM provincias WHERE provincias.id = G.provincia) AS provinciaId,
                 (SELECT email FROM usuarios WHERE usuarios.id = G.usuario_id) AS email,
                 (SELECT avatar FROM usuarios WHERE usuarios.id = G.usuario_id) AS avatar,
@@ -18,7 +18,7 @@ const selectGrupoByIdService = async (idGrupo) => {
                 G.usuario_id,
                 AVG(IFNULL(V.voto, 0)) AS votes,
                 G.createdAt
-            FROM Grupos G
+            FROM grupos G
             LEFT JOIN votos_grupos V ON V.grupoVotado = G.id           
             INNER JOIN usuarios U ON U.id = G.usuario_id
             WHERE G.id = ?
@@ -98,8 +98,8 @@ const selectGrupoByIdService = async (idGrupo) => {
         R.horaInicio,
         R.horaFin,
         R.confirmada
-        FROM Reservas R
-        LEFT JOIN Salas S ON S.id= R.sala_id 
+        FROM reservas R
+        LEFT JOIN salas S ON S.id= R.sala_id 
         WHERE grupo_id = ?
         `,
         [idGrupo]

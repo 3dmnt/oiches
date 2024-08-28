@@ -11,7 +11,7 @@ import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 const Grupos = () => {
     const [filteredGrupos, setFilteredGrupos] = useState([]);
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(8);
+    const pageSize = 8;
     const [total, setTotal] = useState(null);
     const [filters, setFilters] = useState({});
     const [error, setError] = useState(null);
@@ -62,13 +62,13 @@ const Grupos = () => {
             </div>
             <div className="grupo-list-container">
                 {!error &&
-                    (filteredGrupos.length ? (
+                    (filteredGrupos.length > 0 ? (
                         <GrupoList grupos={filteredGrupos} />
                     ) : (
                         <p>No se encontraron grupos</p>
                     ))}
             </div>
-            {totalPages > 1 ? (
+            {totalPages > 1 && (
                 <div className="flex gap-3 justify-center my-16">
                     <button
                         disabled={page === 1}
@@ -86,8 +86,6 @@ const Grupos = () => {
                         <MdKeyboardDoubleArrowRight className="text-xl" />
                     </button>
                 </div>
-            ) : (
-                ''
             )}
             <Footer />
         </motion.div>
