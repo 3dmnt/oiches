@@ -33,7 +33,7 @@ export const ListarReservas = () => {
             }
 
             setReservas(reservas.filter((reserva) => reserva.id !== reservaId));
-            toast.success('Su reserva se ha eliminado con exito');
+            toast.success('Su reserva se ha eliminado con éxito');
         } catch (error) {
             toast.error(error);
             console.error('Fallo al eliminar la reserva:', error);
@@ -64,7 +64,7 @@ export const ListarReservas = () => {
                             : reserva
                     )
                 );
-                toast.success('Su reserva se ha confirmado con exito');
+                toast.success('Su reserva se ha confirmado con éxito');
             } catch (error) {
                 toast.error(error);
                 console.error('Error confirming reserva:', error);
@@ -102,6 +102,15 @@ export const ListarReservas = () => {
         fetchReservas();
     }, [token, VITE_API_URL_BASE, id, type]);
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        });
+    };
+
     return (
         <>
             <section>
@@ -137,7 +146,7 @@ export const ListarReservas = () => {
                                         <span className="block font-semibold">
                                             Fecha:
                                         </span>
-                                        {reserva.fecha}
+                                        {formatDate(reserva.fecha)}
                                     </p>
                                     <p>
                                         <span className="block font-semibold">

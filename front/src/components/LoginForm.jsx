@@ -25,7 +25,7 @@ export const LoginForm = () => {
             const { data } = await loginUserService(dataForm);
             signIn(data.token, data.user);
             toast.success('Inicio de sesión exitoso');
-            navigate('/');
+            navigate('/users');
         } catch (error) {
             setError(error.message);
             toast.error('Error al iniciar sesión');
@@ -72,7 +72,7 @@ export const LoginForm = () => {
                 <p className="mt-4 text-center">
                     <Link
                         to="/users/password/recover"
-                        className="hover:text-purpleOiches text-yellowOiches"
+                        className="hover:text-purpleOiches font-semibold text-yellowOiches"
                     >
                         Recuperar contraseña
                     </Link>

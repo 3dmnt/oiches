@@ -21,6 +21,10 @@ import Grupos from './pages/Grupos.jsx';
 import NotFound from './pages/NotFound.jsx';
 import { CrearReservaPage } from './pages/CrearReservaPage.jsx';
 import { ValidateUser } from './pages/ValidateUser.jsx';
+import SobreOiches from './pages/SobreOiches.jsx';
+import AvisoLegal from './pages/AvisoLegal.jsx';
+import PoliticaPrivacidad from './pages/PoliticaPrivacidad.jsx';
+import PoliticaCookies from './pages/PoliticaCookies.jsx';
 
 function App() {
     return (
@@ -33,6 +37,7 @@ function App() {
                     element={<UserValidationPage />}
                 />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/sobre-oiches" element={<SobreOiches />} />
                 <Route
                     path="/users/password/recover"
                     element={<RecuperarPassword />}
@@ -50,7 +55,6 @@ function App() {
                 />
                 <Route path="/grupo/:idGrupo" element={<GrupoDetail />} />
                 <Route path="/grupos" element={<Grupos />} />{' '}
-                {/* Añadida ruta para la página de grupos */}
                 <Route
                     path="/sala/:idSala/reservas"
                     element={<CrearReservaPage type="sala" />}
@@ -59,10 +63,13 @@ function App() {
                     path="/grupo/:idGrupo/reservas"
                     element={<CrearReservaPage type="grupo" />}
                 />
+                <Route path="/validateUser" element={<ValidateUser />} />
+                <Route path="/aviso-legal" element={<AvisoLegal />} />
                 <Route
-                    path="/validateUser"
-                    element={<ValidateUser  />}
+                    path="/politica-privacidad"
+                    element={<PoliticaPrivacidad />}
                 />
+                <Route path="/politica-cookies" element={<PoliticaCookies />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </AnimatePresence>

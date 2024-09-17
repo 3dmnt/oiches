@@ -1,30 +1,40 @@
+import apiRequest from '../utils/apiRequest';
+
 const FetchGruposService = async (filters = {}, page = 1, pageSize = 10) => {
     try {
-        // Crear los parámetros de consulta, incluyendo filtros, página y tamaño de página
-        const queryParams = new URLSearchParams({
-            ...filters,
+        // Crear un nuevo objeto con los filtros que tienen valores
+        const queryParamsObj = {
             page,
-            pageSize
-        }).toString();
+            limit: pageSize,
+        };
+
+        // Agregar solo los filtros que no estén vacíos
+        if (filters.nombre) queryParamsObj.nombre = filters.nombre;
+        if (filters.provincia) queryParamsObj.provincia = filters.provincia;
+        if (filters.generos) queryParamsObj.generos = filters.generos;
+        if (filters.order) queryParamsObj.order = filters.order;
+
+        // Crear los parámetros de consulta
+        const queryParams = new URLSearchParams(queryParamsObj).toString();
+
+        // Imprimir la URL generada para depurar
+        console.log(
+            'URL generada:',
+            `${import.meta.env.VITE_API_URL_BASE}/grupos?${queryParams}`
+        );
 
         // Construir la URL con los parámetros de consulta
-        const url = `${import.meta.env.VITE_API_URL_BASE}/grupos?${queryParams}`;
+        const url = `${
+            import.meta.env.VITE_API_URL_BASE
+        }/grupos?${queryParams}`;
 
-        // Hacer la solicitud a la API
-        const response = await fetch(url);
+        // Usar apiRequest para hacer la solicitud
+        const data = await apiRequest({ url });
 
-        // Comprobar si la respuesta es exitosa
-        if (!response.ok) {
-            throw new Error('Error al obtener los grupos');
-        }
-
-        // Convertir la respuesta a JSON
-        const data = await response.json();
         return data;
     } catch (error) {
-        // Manejar errores
         console.error('Hubo un error al obtener los grupos:', error);
-        return [];
+        return { total: 0, rows: [] };
     }
 };
 
