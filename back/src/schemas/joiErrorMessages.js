@@ -4,9 +4,10 @@ const joiErrorMessages = {
     'string.alphanum':
         'El valor de "{#key}" solo puede contener caracteres alfanuméricos y ningún espacio',
     'string.empty': 'El campo "{#key}" no debe estar vacío',
+    'string.uri': 'El campo "{#key}"  debe una URL válida',
     'number.base': 'El valor de "{#key}" debe ser un número',
     'number.max': 'El archivo no debe exceder los 3 MB',
-    'object.base': 'El valor de "{#key}" debe ser un objeto',
+    'object.base': 'Solo puedes subir un@ {#key} al mismo tiempo',
     'any.only': 'Solo se permiten fotos jpeg, png o webp',
     'string.email': 'Debe proporcionar un correo electrónico válido.',
     'string.pattern.base':

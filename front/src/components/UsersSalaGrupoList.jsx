@@ -3,20 +3,22 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { FaPencil } from 'react-icons/fa6';
 import { FaTrashAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import useAuth from '../hooks/useAuth';
 import { ConfirmationModal } from './ConfirmModal.jsx';
 import 'react-toastify/dist/ReactToastify.css';
 import Toastify from './Toastify.jsx';
 import useListSalasGrupoUser from '../hooks/useListSalasGrupoUser.jsx';
 
-const UsersSalaGrupoList = () => {
-    const { userLogged, token } = useAuth();
+const UsersSalaGrupoList = ({ userLogged, token, userOwner }) => {
     const { VITE_API_URL_BASE } = import.meta.env;
     const [modalOpen, setModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
     const [deleteType, setDeleteType] = useState(null);
+    const idUserOwner = userOwner.user.id;
 
-    const { entries, setEntries } = useListSalasGrupoUser(token);
+    const { entries = [], setEntries } = useListSalasGrupoUser({
+        token,
+        idUserOwner,
+    });
 
     const type = userLogged.roles;
 
@@ -65,11 +67,14 @@ const UsersSalaGrupoList = () => {
     };
 
     return (
-        <section className="mt-8 border-y-2 border-greyOiches-50 py-6 flex md:flex-col md:items-center">
+        <section className="py-6 flex border-b-2 border-greyOiches-50 flex-col items-center">
             {entries.length > 0 ? (
                 <>
                     <h2 className="text-center font-semibold text-lg mb-6">
-                        Gestiona {type === 'sala' ? ' tus salas' : ' tu grupo'}
+                        Gestiona{' '}
+                        {userOwner.user.roles === 'sala'
+                            ? ' tus salas'
+                            : ' tu grupo'}
                     </h2>
                     <ul className="mb-4">
                         {entries.map((entry) => (
@@ -80,7 +85,7 @@ const UsersSalaGrupoList = () => {
                                 <IoIosArrowForward /> {entry.nombre}
                                 <a
                                     href={
-                                        type === 'sala'
+                                        userOwner.user.roles === 'sala'
                                             ? `/sala/${entry.id}/edit`
                                             : `/grupos/${entry.id}/edit`
                                     }
@@ -107,23 +112,28 @@ const UsersSalaGrupoList = () => {
                 ''
             )}
 
-            {type === 'grupo' && entries.length === 0 ? (
+            {(type === 'grupo' && entries.length === 0) ||
+            // (type === 'admin' && entries.length === 0) ||
+            (type === 'admin' &&
+                userOwner.user.roles === 'grupo' &&
+                entries.length === 0) ? (
                 <a
-                    href="/creacion-grupo"
-                    className="btn-account max-w-44 min-w-32 mx-auto"
+                    href={`/creacion-grupo/${userOwner.user.id}`}
+                    className="btn-account text-xl"
                 >
-                    Crea un grupo
+                    Publica tu proyecto musical
                 </a>
             ) : (
                 ''
             )}
 
-            {type === 'sala' ? (
+            {type === 'sala' ||
+            (type === 'admin' && userOwner.user.roles == 'sala') ? (
                 <a
-                    href="/creacion-sala"
-                    className="btn-account max-w-44 min-w-32 mx-auto"
+                    href={`/creacion-sala/${userOwner.user.id}`}
+                    className="btn-account text-xl"
                 >
-                    Crea una sala
+                    Publica tu sala
                 </a>
             ) : (
                 ''

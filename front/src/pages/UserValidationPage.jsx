@@ -17,6 +17,7 @@ const UserValidationPage = () => {
                 const url = `${
                     import.meta.env.VITE_API_URL_BASE
                 }/users/validate/${registrationCode}`;
+
                 const response = await fetch(url, {
                     method: 'GET',
                     headers: {

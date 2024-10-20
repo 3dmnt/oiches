@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/auth/auth.context';
 import { toast } from 'react-toastify';
 import Toastify from './Toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Multiselect from 'multiselect-react-dropdown';
 
 import { IoIosCloseCircleOutline } from 'react-icons/io';
@@ -15,11 +15,15 @@ const GrupoCreacion = () => {
     const { userLogged, token } = useContext(AuthContext);
     const navigate = useNavigate();
 
+    const { userId } = useParams();
+
     const [formValues, setFormValues] = useState({
         nombre: '',
         provincia: '',
+        web: '',
         generos: [],
         honorarios: '',
+        honorarios_to: '',
         biografia: '',
         mediaA: '',
         mediaB: '',
@@ -128,16 +132,21 @@ const GrupoCreacion = () => {
         });
 
         try {
-            await registerGrupoService({ token, formData });
+            await registerGrupoService({
+                token,
+                userId,
+                formData,
+            });
 
-            toast.success('Has creado tu nuevo grupo con éxito');
-            navigate('/users');
+            toast.success('Has creado tu nuevo artista/grupo con éxito');
+            navigate(`/users/account/${userId}`);
         } catch (error) {
             setError(error.message);
             toast.error(error.message);
         }
     };
-    const { nombre, provincia, honorarios, biografia } = formValues;
+    const { nombre, provincia, web, honorarios, honorarios_to, biografia } =
+        formValues;
 
     return (
         <>
@@ -146,12 +155,12 @@ const GrupoCreacion = () => {
                     <div className="md:w-3/5 md:flex md:flex-wrap md:justify-between">
                         <div className="flex flex-col mb-4 md:w-[calc(50%-0.5rem)]">
                             <label htmlFor="nombre" className="font-semibold">
-                                Nombre del Grupo:*
+                                Nombre del artista/grupo:*
                             </label>
                             <input
                                 type="text"
                                 name="nombre"
-                                placeholder="Nombre del grupo"
+                                placeholder="Nombre del artista/grupo"
                                 value={nombre}
                                 required
                                 onChange={handleChange}
@@ -163,7 +172,7 @@ const GrupoCreacion = () => {
                                 htmlFor="generos"
                                 className="font-semibold mb-2"
                             >
-                                Géneros:
+                                Géneros *:
                             </label>
                             <Multiselect
                                 options={genres.map((genre) => ({
@@ -176,7 +185,8 @@ const GrupoCreacion = () => {
                                 onSelect={handleGenChange}
                                 onRemove={handleGenChange}
                                 displayValue="nombre"
-                                placeholder="Selecciona los géneros"
+                                placeholder="Selecciona los géneros musicales"
+                                required
                                 customCloseIcon={
                                     <IoIosCloseCircleOutline className="ml-1" />
                                 }
@@ -214,21 +224,50 @@ const GrupoCreacion = () => {
                                 ))}
                             </select>
                         </div>
+
                         <div className="flex flex-col mb-4 md:w-[calc(50%-0.5rem)]">
+                            <label htmlFor="web" className="font-semibold">
+                                Web:
+                            </label>
+                            <input
+                                type="url"
+                                name="web"
+                                placeholder="https://www.tugrupo.com"
+                                value={web}
+                                onChange={handleChange}
+                                className="form-input"
+                            />
+                        </div>
+
+                        <div className="flex gap-4 mb-4">
                             <label
                                 htmlFor="honorarios"
                                 className="font-semibold"
                             >
-                                Caché:
+                                Caché desde:
+                                <input
+                                    type="number"
+                                    name="honorarios"
+                                    placeholder="Caché del artista/grupo"
+                                    value={honorarios}
+                                    onChange={handleChange}
+                                    className="form-input font-normal"
+                                />
                             </label>
-                            <input
-                                type="number"
-                                name="honorarios"
-                                placeholder="Caché del grupo"
-                                value={honorarios}
-                                onChange={handleChange}
-                                className="form-input"
-                            />
+                            <label
+                                htmlFor="honorarios_to"
+                                className="font-semibold"
+                            >
+                                Caché hasta:
+                                <input
+                                    type="number"
+                                    name="honorarios_to"
+                                    placeholder="Caché del artista/grupo"
+                                    value={honorarios_to}
+                                    onChange={handleChange}
+                                    className="form-input font-normal"
+                                />
+                            </label>
                         </div>
 
                         <div className="flex flex-col mb-4 md:w-full">
@@ -297,7 +336,7 @@ const GrupoCreacion = () => {
 
                         <section className="mb-8 gap-2 flex flex-wrap">
                             <p className="mb-2 font-semibold w-full">
-                                Fotos del grupo
+                                Fotos del artista/grupo
                             </p>
                             {['A', 'B', 'C', 'D'].map((key) => (
                                 <div
@@ -339,7 +378,7 @@ const GrupoCreacion = () => {
                     <div className="my-12 max-w-80">
                         <input
                             type="submit"
-                            value="Crear Grupo"
+                            value="Publicar artista/grupo"
                             className="btn-account p-3 w-full"
                         />
                     </div>

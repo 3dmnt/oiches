@@ -4,9 +4,15 @@ import { uploadFiles } from '../../utils/uploadFiles.js';
 import insertSalaService from '../../services/salas/insertSalaService.js';
 import insertSalaPhotoService from '../../services/salas/insertSalaPhotoService.js';
 import { insertSalaGenerosService } from '../../services/salas/insertSalaGenerosService.js';
+import selectUserByIdService from '../../services/users/selectUserByIdService.js';
+import generateErrorsUtil from '../../utils/generateErrorsUtil.js';
 
 const createSalaController = async (req, res, next) => {
     try {
+        const { userId } = req.params;
+
+        const adminUser = await selectUserByIdService(req.user.id);
+
         const {
             nombre,
             provincia,
@@ -17,6 +23,7 @@ const createSalaController = async (req, res, next) => {
             direccion,
             condiciones,
             equipamiento,
+            web,
             horaReservasStart,
             horaReservasEnd,
         } = req.body;
@@ -27,6 +34,9 @@ const createSalaController = async (req, res, next) => {
             Object.assign(req.body, req.files)
         );
 
+        if (req.user.id !== userId && adminUser[0].roles !== 'admin')
+            throw generateErrorsUtil('No puedes crear este proyecto', 400);
+
         const salaId = await insertSalaService(
             nombre,
             provincia,
@@ -36,9 +46,10 @@ const createSalaController = async (req, res, next) => {
             direccion,
             condiciones,
             equipamiento,
+            web,
             horaReservasStart,
             horaReservasEnd,
-            req.user.id
+            userId
         );
 
         // Insertamos los géneros
@@ -78,7 +89,7 @@ const createSalaController = async (req, res, next) => {
             data: {
                 sala: {
                     id: salaId,
-                    usuario_id: req.user.id,
+                    usuario_id: userId,
                     generos: generosList,
                     nombre,
                     provincia,
@@ -88,6 +99,7 @@ const createSalaController = async (req, res, next) => {
                     direccion,
                     condiciones,
                     equipamiento,
+                    web,
                     horaReservasStart,
                     horaReservasEnd,
                     photos,

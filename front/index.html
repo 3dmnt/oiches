@@ -1,13 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
     <head>
         <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Oiches</title>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+        <!-- Schema Markup for Organization (puede estar en el index.html si es global) -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "Oiches",
+                "url": "https://oiches.com",
+                "contactPoint": {
+                    "@type": "ContactPoint",
+                    "email": "hola@oiches.com",
+                    "contactType": "Customer Service"
+                }
+            }
+        </script>
     </head>
     <body>
-        <div class="w-full h-full" id="root"></div>
+        <!-- Google Tag Manager (noscript) para compatibilidad sin JS -->
+        <noscript>
+            <iframe
+                src="https://www.googletagmanager.com/ns.html?id=GTM-NS82WX8K"
+                height="0"
+                width="0"
+                style="display: none; visibility: hidden"
+            ></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+
+        <div class="w-full h-full break-words" id="root"></div>
         <script type="module" src="/src/main.jsx"></script>
     </body>
 </html>

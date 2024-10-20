@@ -14,13 +14,8 @@ import {
     DeleteGrupoGenerosService,
     addGeneroGrupoService,
 } from '../services/EditGrupoService.js';
-import { DeleteGrupoMedia, AddGrupoMedia } from './GrupoMedia.jsx';
-import {
-    DeleteGrupoFiles,
-    AddGrupoFiles,
-    AddGrupoPhotos,
-    DeleteGrupoPhotos,
-} from './GrupoFiles.jsx';
+import { AddGrupoMedia } from './GrupoMedia.jsx';
+import { AddRiderForm, AddFotosForm } from './GrupoFiles.jsx';
 
 const GrupoEdit = () => {
     const { token, userLogged } = useContext(AuthContext);
@@ -29,7 +24,9 @@ const GrupoEdit = () => {
     const [grupo, setGrupo] = useState({
         nombre: '',
         provincia: '',
+        web: '',
         honorarios: 0,
+        honorarios_to: 0,
         biografia: '',
         activeGenres: [],
         hasRider: 0,
@@ -53,11 +50,14 @@ const GrupoEdit = () => {
                 setGrupo({
                     nombre: data.grupo.nombre || '',
                     provincia: data.grupo.provinciaId || '',
+                    web: data.grupo.web || '',
                     honorarios: data.grupo.honorarios || 0,
+                    honorarios_to: data.grupo.honorarios_to || 0,
                     biografia: data.grupo.biografia || '',
                     activeGenres: data.grupo.genero || [],
                     hasRider: data.grupo.pdf.length,
                     hasPhotos: data.grupo.fotos.length,
+                    owner: data.grupo.usuario_id,
                 });
             } catch (error) {
                 setError(error.message);
@@ -128,7 +128,9 @@ const GrupoEdit = () => {
             const dataForm = new FormData();
             dataForm.append('nombre', grupo.nombre || '');
             dataForm.append('provincia', grupo.provincia || '');
+            dataForm.append('web', grupo.web || '');
             dataForm.append('honorarios', grupo.honorarios || 0);
+            dataForm.append('honorarios_to', grupo.honorarios_to || 0);
             dataForm.append('biografia', grupo.biografia || '');
             await EditGrupoService({
                 token,
@@ -150,9 +152,10 @@ const GrupoEdit = () => {
             )
     );
 
-    return userLogged && userLogged.roles === 'grupo' ? (
-        <>
-            <section className="flex flex-col mb-4 md:flex-row md:justify-between md:max-w-3xl md:col-start-1 md:col-end-4 md:mb-12">
+    return (userLogged && grupo.owner === userLogged.id) ||
+        (userLogged && userLogged.roles === 'admin') ? (
+        <div className="px-6 pt-3 pb-6 md:px-12 bg-white rounded-lg shadow-md md:gap-x-12">
+            <section className="flex flex-col mb-4 md:flex-row md:justify-between md:max-w-3xl md:mb-12">
                 <div className="mb-6">
                     <p className="font-semibold my-2">
                         Selecciona los géneros que quieres eliminar:
@@ -224,16 +227,16 @@ const GrupoEdit = () => {
 
             <form
                 onSubmit={handleSubmit}
-                className="md:grid md:grid-cols-4 md:gap-x-8 md:col-start-1 md:col-end-3"
+                className="md:grid md:grid-cols-4 md:gap-4"
             >
-                <div className="flex flex-col mb-4 md:col-start-1 md:col-end-3">
+                <div className="flex flex-col mb-4 md:col-start-1 md:col-end-5 md:mb-0 lg:col-end-3">
                     <label htmlFor="nombre" className="font-semibold">
-                        Nombre del Grupo:
+                        Nombre del artista/grupo:
                     </label>
                     <input
                         type="text"
                         name="nombre"
-                        placeholder="Nombre del grupo"
+                        placeholder="Nombre del artista/grupo"
                         value={grupo.nombre}
                         onChange={(e) =>
                             setGrupo({ ...grupo, nombre: e.target.value })
@@ -242,7 +245,7 @@ const GrupoEdit = () => {
                     />
                 </div>
 
-                <div className="flex flex-col mb-4 md:col-start-3 md:col-end-4">
+                <div className="flex flex-col mb-4 md:col-start-1 md:col-end-3 md:mb-0 lg:col-start-3 lg:col-end-5">
                     <label htmlFor="provincia" className="font-semibold">
                         Provincia:
                     </label>
@@ -265,14 +268,34 @@ const GrupoEdit = () => {
                         ))}
                     </select>
                 </div>
-                <div className="flex flex-col mb-4 md:col-start-4 md:col-end-5">
+
+                <div className="flex flex-col mb-4 md:col-start-3 md:col-end-5 md:mb-0 lg:col-start-1 lg:col-end-3">
+                    <label htmlFor="web" className="font-semibold">
+                        Web:
+                    </label>
+                    <input
+                        type="url"
+                        name="web"
+                        placeholder="https://www.tugrupo.com"
+                        value={grupo.web}
+                        onChange={(e) =>
+                            setGrupo({
+                                ...grupo,
+                                web: e.target.value,
+                            })
+                        }
+                        className="form-input"
+                    />
+                </div>
+
+                <div className="flex flex-col mb-4 md:col-start-1 md:col-end-3 md:mb-0 lg:col-start-3 lg:col-end-4">
                     <label htmlFor="honorarios" className="font-semibold">
-                        Caché:
+                        Caché desde:
                     </label>
                     <input
                         type="number"
                         name="honorarios"
-                        placeholder="Caché del grupo"
+                        placeholder="Caché desde"
                         value={grupo.honorarios}
                         onChange={(e) =>
                             setGrupo({
@@ -280,9 +303,29 @@ const GrupoEdit = () => {
                                 honorarios: e.target.value,
                             })
                         }
-                        className="form-input"
+                        className="form-input font-normal"
                     />
                 </div>
+
+                <div className="flex flex-col mb-4 md:col-start-3 md:col-end-5 md:mb-0 lg:col-start-4 lg:col-end-5">
+                    <label htmlFor="honorarios_to" className="font-semibold">
+                        Caché hasta:{' '}
+                    </label>
+                    <input
+                        type="number"
+                        name="honorarios_to"
+                        placeholder="Caché hasta"
+                        value={grupo.honorarios_to}
+                        onChange={(e) =>
+                            setGrupo({
+                                ...grupo,
+                                honorarios_to: e.target.value,
+                            })
+                        }
+                        className="form-input font-normal"
+                    />
+                </div>
+
                 <div className="flex flex-col mb-4 md:col-start-1 md:col-end-5">
                     <label htmlFor="biografia" className="font-semibold">
                         Biografía:
@@ -313,23 +356,17 @@ const GrupoEdit = () => {
                 {error && <div>{error}</div>}
             </form>
 
-            <section className="mt-12 md:col-start-1 md:col-end-3">
-                <DeleteGrupoMedia idGrupo={idGrupo} />
+            <section className="mt-12">
                 <AddGrupoMedia idGrupo={idGrupo} />
             </section>
-            <section className="mt-12 md:mt-0 md:col-start-3 md:col-end-4 md:row-start-2">
-                {grupo.hasRider === 0 ? (
-                    <AddGrupoFiles idGrupo={idGrupo} />
-                ) : (
-                    <DeleteGrupoFiles idGrupo={idGrupo} />
-                )}
+            <section className="mt-12">
+                <AddFotosForm />
             </section>
-            <section className="mt-12 d:col-start-3 md:col-end-4 md:mt-0">
-                <DeleteGrupoPhotos idGrupo={idGrupo} />
-                {grupo.hasPhotos < 4 && <AddGrupoPhotos idGrupo={idGrupo} />}
+            <section className="mt-12">
+                <AddRiderForm />
             </section>
             <Toastify />
-        </>
+        </div>
     ) : (
         <h1 className="text-center text-xl">No puedes acceder a esta página</h1>
     );

@@ -8,7 +8,6 @@ import {
     canEditGrupo,
     hasOneGroup,
     checkIfGroup,
-    canEditGrupoFiles,
 } from '../middleware/index.js';
 
 // Importamos las funciones controladoras finales.
@@ -31,7 +30,7 @@ const router = express.Router();
 
 // Crear un nuevo grupo
 router.post(
-    '/users/grupo',
+    '/users/grupo/:userId',
     authUser,
     userExists,
     checkIfGroup,
@@ -112,10 +111,10 @@ router.post(
 
 // Borrar files de un grupo
 router.delete(
-    '/grupos/:photoName/:deletePhoto',
+    '/grupos/:photoName/:deletePhoto/:idGrupo',
     authUser,
     userExists,
-    canEditGrupoFiles,
+    canEditGrupo,
     deleteFileGrupoController
 );
 

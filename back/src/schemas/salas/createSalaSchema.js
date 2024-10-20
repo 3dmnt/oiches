@@ -1,6 +1,7 @@
 // Importamos joi.
 import Joi from 'joi';
 import imgSchema from '../imgSchema.js';
+import fileSchema from '../fileSchema.js';
 
 // Importamos los mensajes de error personalizados.
 import joiErrorMessages from '../joiErrorMessages.js';
@@ -28,16 +29,15 @@ const createSalaSchema = Joi.object({
     condiciones: Joi.string().max(2000).messages(joiErrorMessages),
     equipamiento: Joi.string().max(2000).messages(joiErrorMessages),
     provincia: Joi.number().max(50).required().messages(joiErrorMessages),
+    web: Joi.string().uri().messages(joiErrorMessages),
     horaReservasStart: Joi.string()
         .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
-        .required()
         .messages({
             'string.pattern.base':
                 'El campo de hora debe estar en formato HH:mm',
         }),
     horaReservasEnd: Joi.string()
         .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
-        .required()
         .messages({
             'string.pattern.base':
                 'El campo de hora debe estar en formato HH:mm',
@@ -46,6 +46,7 @@ const createSalaSchema = Joi.object({
     photoB: imgSchema.optional(),
     photoC: imgSchema.optional(),
     photoD: imgSchema.optional(),
+    file: fileSchema.optional(),
 });
 
 export default createSalaSchema;

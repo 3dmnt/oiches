@@ -12,9 +12,10 @@ const insertSalaService = async (
     direccion,
     condiciones,
     equipamiento,
+    web,
     horaReservasStart,
     horaReservasEnd,
-    usuario_id
+    userId
 ) => {
     const pool = await getPool();
 
@@ -23,13 +24,13 @@ const insertSalaService = async (
 
     await pool.query(
         `
-            INSERT INTO salas (id, provincia, usuario_id,nombre,capacidad,descripcion,precios,direccion,condiciones,equipamiento,horaReservasStart, horaReservasEnd)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+            INSERT INTO salas (id, provincia, usuario_id,nombre,capacidad,descripcion,precios,direccion,condiciones,equipamiento, web, horaReservasStart, horaReservasEnd)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
         `,
         [
             salaId,
             provincia,
-            usuario_id,
+            userId,
             nombre,
             capacidad,
             descripcion,
@@ -37,6 +38,7 @@ const insertSalaService = async (
             direccion,
             condiciones,
             equipamiento,
+            web,
             horaReservasStart,
             horaReservasEnd,
         ]
