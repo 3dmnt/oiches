@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import Slider from 'react-slick';
-// Asegúrate de tener tus estilos CSS aquí
 
 const SliderMulti = ({ children }) => {
     const [isMounted, setIsMounted] = useState(false);
@@ -42,6 +41,17 @@ const SliderMulti = ({ children }) => {
                     slidesToScroll: 1,
                     initialSlide: 1,
                     dots: true,
+                    arrows: true,
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    initialSlide: 1,
+                    dots: true,
+                    arrows: false,
                 },
             },
         ],

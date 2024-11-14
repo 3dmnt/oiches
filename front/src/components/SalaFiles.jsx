@@ -101,7 +101,9 @@ export const AddSalaRiderForm = () => {
     return (
         <form onSubmit={handleRiderSubmit} className="mb-8 w-full">
             <p className="font-semibold mb-2">Sube el Rider (.pdf)</p>
-
+            <p className="text-xs mb-3">
+                (*) El tamaño del archivo no debe exceder 3Mb
+            </p>
             {/* Previsualización del Rider ya subido */}
             {uploadedRider && (
                 <div className="sect-photo">
@@ -145,13 +147,15 @@ export const AddSalaRiderForm = () => {
                             <p className="text-red-500">{riderError}</p>
                         )}
                     </div>
-                    <div className="mt-3 max-w-80">
-                        <input
-                            type="submit"
-                            value="Subir Rider"
-                            className="btn-account max-w-44"
-                        />
-                    </div>
+                    {rider && (
+                        <div className="mt-3 max-w-80">
+                            <input
+                                type="submit"
+                                value="Subir Rider"
+                                className="btn-account max-w-44"
+                            />
+                        </div>
+                    )}
                 </>
             )}
         </form>

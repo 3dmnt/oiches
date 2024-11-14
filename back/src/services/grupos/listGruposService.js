@@ -12,6 +12,7 @@ export async function listGruposService(filters) {
         g.usuario_id,
         g.createdAt,
         g.updatedAt,
+        (SELECT avatar FROM usuarios WHERE usuarios.id = g.usuario_id) AS avatar,
         p.provincia AS provincia_nombre,
         COALESCE(SUM(v.voto), 0) AS votos,
         (SELECT AVG(voto) FROM votos_grupos WHERE votos_grupos.grupoVotado = g.id) AS media_votos,
@@ -102,7 +103,7 @@ export async function listGruposService(filters) {
 
     // Consulta para obtener las fotos agrupadas por grupo
     const [photos] = await pool.query(`
-        SELECT id, name, grupoId 
+        SELECT id, name, grupoId, es_principal 
         FROM grupo_fotos
     `);
 
@@ -115,6 +116,7 @@ export async function listGruposService(filters) {
             acc[photo.grupoId].push({
                 id: photo.id,
                 name: photo.name,
+                main: photo.es_principal,
             });
         }
         return acc;

@@ -18,6 +18,7 @@ import {
     editSalaController,
     deletePhotoSalaController,
     insertPhotosSalaController,
+    setMainPhotoController,
     deleteSalaController,
     addSalaGeneroController,
     deleteSalaGeneroController,
@@ -73,6 +74,16 @@ router.post(
     insertPhotosSalaController
 );
 
+// Seleccionar una foto como principal
+router.put(
+    '/salas/:idSala/fotos/:photoId/main',
+    authUser,
+    userExists,
+    salaExists,
+    canEditSala,
+    setMainPhotoController
+);
+
 // Añadir rider a una sala
 router.post(
     '/salas/rider/:idSala',
@@ -83,7 +94,14 @@ router.post(
 );
 
 // Borrar una sala
-router.delete('/salas/delete/:idSala', authUser, deleteSalaController);
+router.delete(
+    '/salas/delete/:idSala',
+    authUser,
+    userExists,
+    salaExists,
+    canEditSala,
+    deleteSalaController
+);
 
 // Borrar files de una sala
 router.delete(

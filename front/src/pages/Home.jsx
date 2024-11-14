@@ -5,13 +5,13 @@ import { useEffect, useState } from 'react';
 import SalaCard from '../components/SalaCard.jsx';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import SalasImg from '../assets/salas-de-conciertos.webp';
-import GruposImg from '../assets/musicos.jpg';
 import GrupoCard from '../components/GrupoCard.jsx';
 import SliderMulti from '../components/SliderMulti.jsx';
 import Footer from '../components/Footer.jsx';
 import Toastify from '../components/Toastify.jsx';
-import Seo from '../components/SEO/Seo.jsx'; // Importar el componente Seo
+import Seo from '../components/SEO/Seo.jsx';
+import Steps from '../components/Steps.jsx';
+import Conectate from '../components/Conectate.jsx';
 
 const Home = () => {
     const [salas, setSalas] = useState([]);
@@ -23,7 +23,6 @@ const Home = () => {
             try {
                 const response = await fetch(`${VITE_API_URL_BASE}/salas`);
                 const result = await response.json();
-
                 setSalas(Array.isArray(result.result) ? result.result : []);
             } catch (error) {
                 console.error('Error fetching salas:', error);
@@ -49,93 +48,116 @@ const Home = () => {
 
     return (
         <>
-            {/* Agregar el componente Seo para las etiquetas meta */}
             <Seo
                 title="Oiches - Conecta Músicos y Salas de Conciertos"
                 description="Descubre los músicos mejor valorados y las salas de conciertos más populares en Oiches. Vive la mejor música en vivo y organiza eventos musicales inolvidables."
                 keywords="músicos, salas de conciertos, música en vivo, eventos musicales"
                 url="https://oiches.com"
-                image="https://oiches.com/assets/salas-de-conciertos.webp"
+                image="https://oiches.com/assets/Oiches-Conectamos-musicos-y-salas.jpg"
                 type="website"
             />
-
-            {/* Resto del contenido */}
             <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: '100%' }}
-                exit={{ opacity: 0, height: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
             >
                 <HeaderHero />
-                <section className="hero relative flex flex-col justify-center items-center bg-hero-home bg-cover bg-center h-96 md:h-[680px]">
-                    <h1 className="hero-title text-white">
-                        Encuentra tu Banda Sonora
-                    </h1>
-                    <p className="text-xl md:text-3xl hero-subtitle text-white">
-                        Donde la música y el escenario se unen
-                    </p>
-                </section>
-                <main className="flex flex-col gap-20 mb-8 max-w-screen-xl mx-auto p-8 md:my-12">
-                    <section className="grid gap-6">
-                        <div className="flex justify-between place-items-center">
-                            <h2 className="text-2xl text-center font-semibold mx-auto md:mb-4 md:text-3xl">
-                                Músicos más votados
-                            </h2>
+
+                {/* Hero Section */}
+                <section className="hero relative flex flex-col justify-center items-start bg-hero-home bg-cover bg-center sm:h-96 md:h-[680px] p-8 md:p-16">
+                    <div className="text-left max-w-lg mr-auto">
+                        <h1 className="text-white text-4xl md:text-5xl font-bold leading-tight">
+                            Encuentra tu banda sonora
+                        </h1>
+                        <p className="text-white text-lg md:text-xl mt-4 mb-3 max-[600px]:hidden">
+                            Encuentra el escenario perfecto o la banda ideal sin
+                            complicaciones.
+                        </p>
+                        <p className="text-white text-2xl md:text-3xl font-semibold mt-0.25 mb-8">
+                            ¡Vive la música en cada rincón!
+                        </p>
+                        <div className="flex gap-4">
+                            <Link
+                                to="/grupos"
+                                className="bg-purpleOiches hover:bg-moradoOiches text-white font-bold py-2 px-6 rounded-lg transition-transform hover:scale-105"
+                            >
+                                Músicos
+                            </Link>
+                            <Link
+                                to="/salas"
+                                className="bg-moradoOiches hover:bg-purpleOiches text-white font-bold py-2 px-6 rounded-lg transition-transform hover:scale-105"
+                            >
+                                Salas
+                            </Link>
                         </div>
+                    </div>
+                </section>
+
+                {/* Main Content */}
+                <main className="w-11/12 mx-auto mt-6 mb-20 md:max-w-7xl md:mb-28">
+                    {/* Músicos más votados */}
+                    <section className="mt-16 md:mt-20">
+                        <h2 className="text-3xl text-center font-bold mb-8 mx-auto md:text-4xl md:mb-12">
+                            Músicos más votados
+                        </h2>
                         {grupos.length > 0 ? (
                             <SliderMulti>
-                                {grupos.map((grupo) => (
+                                {grupos.slice(0, 8).map((grupo) => (
                                     <GrupoCard key={grupo.id} grupo={grupo} />
                                 ))}
                             </SliderMulti>
                         ) : (
-                            <p>Músicos no encontrados</p>
+                            <p className="text-center text-gray-500">
+                                Músicos no encontrados
+                            </p>
                         )}
-                    </section>
-                    <section className="grid gap-6">
-                        <div className="flex justify-between place-items-center">
-                            <h2 className="text-2xl text-center font-semibold mx-auto md:mb-4 md:text-3xl">
-                                Salas más votadas
-                            </h2>
+                        <div className="flex justify-center mt-16">
+                            <Link
+                                to="/grupos"
+                                className="bg-gradient-to-r from-purpleOiches to-moradoOiches text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-transform hover:scale-105"
+                            >
+                                Todos los músicos
+                            </Link>
                         </div>
+                    </section>
+
+                    {/* Salas más votadas */}
+                    <section className="mt-16 md:mt-20">
+                        <h2 className="text-3xl text-center font-bold mb-8 mx-auto md:text-4xl md:mb-12">
+                            Salas más votadas
+                        </h2>
                         {salas.length > 0 ? (
                             <SliderMulti>
-                                {salas.map((sala) => (
+                                {salas.slice(0, 8).map((sala) => (
                                     <SalaCard key={sala.id} sala={sala} />
                                 ))}
                             </SliderMulti>
                         ) : (
-                            <p>Salas no encontradas</p>
+                            <p className="text-center text-gray-500">
+                                Salas no encontradas
+                            </p>
                         )}
+                        <div className="flex justify-center mt-16">
+                            <Link
+                                to="/salas"
+                                className="bg-gradient-to-r from-moradoOiches to-purpleOiches text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-transform hover:scale-105"
+                            >
+                                Todas las salas
+                            </Link>
+                        </div>
                     </section>
-                    <section className="flex flex-col md:grid md:grid-cols-2 mx-auto gap-8 md:justify-around md:mx-auto md:my-6 xl:w-1200">
-                        <Link
-                            className="relative hover:scale-105 transition-all"
-                            to={'/grupos'}
-                        >
-                            <img
-                                className="w-96 md:w-auto rounded-2xl"
-                                src={GruposImg}
-                                alt="Músicos en Oiches"
-                            />
-                            <span className="absolute bottom-3 px-4 z-50 text-3xl w-full text-white bg-black bg-opacity-65">
-                                Músicos
-                            </span>
-                        </Link>
-                        <Link
-                            className="relative hover:scale-105 transition-all"
-                            to={'/salas'}
-                        >
-                            <img
-                                className="w-96 md:w-auto h-full rounded-2xl"
-                                src={SalasImg}
-                                alt="Salas de conciertos en Oiches"
-                            />
-                            <span className="absolute bottom-3 px-4 z-50 text-3xl text-white w-full bg-black bg-opacity-65">
-                                Salas
-                            </span>
-                        </Link>
+
+                    {/* Sección de Steps */}
+                    <section className="mt-20 mx-4 flex justify-center items-center md:mt-28">
+                        <Steps />
+                    </section>
+
+                    {/* Sección de Conectate */}
+                    <section className="mt-20 mx-4 flex flex-col justify-between items-center gap-16 md:flex-row md:mt-28">
+                        <Conectate />
                     </section>
                 </main>
+
                 <Footer />
                 <Toastify />
             </motion.div>

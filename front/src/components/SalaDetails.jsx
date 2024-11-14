@@ -2,22 +2,21 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { FaPencilAlt } from 'react-icons/fa';
-
 import useSala from '../hooks/useSala.jsx';
 import StarRating from './StartRating.jsx';
 import Header from './Header.jsx';
 import DefaultProfile from '/DefaultProfile2.png';
-import Noimage from '../../src/assets/noimage.png';
 import useAuth from '../hooks/useAuth.jsx';
 import Footer from './Footer.jsx';
 import Seo from '../components/SEO/Seo.jsx'; // Seo
+import TextFormat from './TextFormato.jsx';
+import MapComponent from './MapComponent.jsx';
 
 const SalaDetail = () => {
     const { VITE_API_URL_BASE } = import.meta.env;
     const { idSala } = useParams();
     const { entry, error } = useSala(idSala);
     const { currentUser } = useAuth();
-
     const [actualUser, setActualUser] = useState('');
 
     const {
@@ -29,14 +28,16 @@ const SalaDetail = () => {
         condiciones,
         genero,
         direccion,
+        ciudad,
         capacidad,
         usuarioAvatar,
         comentarios,
         email,
-        precios,
         fotos,
         pdf,
     } = entry || {}; // Desestructuración de `entry` (por si aún no está disponible)
+
+    const wholeAddress = `${direccion}, ${ciudad}, ${provincia}`;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -76,37 +77,68 @@ const SalaDetail = () => {
 
             <Header />
             <main className="p-4 mt-6 flex flex-col gap-6 mx-auto shadow-xl w-11/12 md:max-w-1200 md:px-24">
-                <section className="flex flex-col items-center md:items-start gap-6 py-4">
-                    <img
-                        className="w-32 h-32 rounded-full object-cover shadow-lg"
-                        src={
-                            usuarioAvatar
-                                ? `${VITE_API_URL_BASE}/uploads/${usuarioAvatar}`
-                                : DefaultProfile
-                        }
-                        alt="Imagen de perfil de la sala"
-                    />
-                    <h2 className="text-2xl font-bold text-center md:text-left">
+                <section className="mb-6">
+                    {(usuarioAvatar || fotos.length > 0) && (
+                        <img
+                            className="w-40 h-40 rounded-full object-cover shadow-lg mx-auto md:ml-0"
+                            src={
+                                usuarioAvatar
+                                    ? `${VITE_API_URL_BASE}/uploads/${usuarioAvatar}`
+                                    : `${VITE_API_URL_BASE}/uploads/${
+                                          fotos.find((foto) => foto.main === 1)
+                                              ?.name || fotos[0]?.name
+                                      }`
+                            }
+                            alt="Imagen de perfil de la sala"
+                        />
+                    )}
+                    <h2 className="text-3xl font-bold mt-6 text-left mb-2">
                         {nombre}
                     </h2>
+                    <div className="flex flex-wrap gap-6">
+                        {direccion && (
+                            <>
+                                <p className="text-black">{wholeAddress}</p>
+                                <p>
+                                    <a
+                                        className="font-semibold underline"
+                                        href="#map"
+                                    >
+                                        Ver en mapa
+                                    </a>
+                                </p>
+                            </>
+                        )}
+
+                        {currentUser && (
+                            <p className="m-auto md:mr-0">
+                                <Link
+                                    to={`/sala/${idSala}/reservas`}
+                                    className="bg-gradient-to-r from-purpleOiches to-moradoOiches text-white font-bold py-2 px-4 rounded-lg shadow-lg"
+                                >
+                                    Quiero tocar aquí
+                                </Link>
+                            </p>
+                        )}
+                    </div>
                 </section>
 
-                <section className="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+                <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     {descripcion && (
-                        <div className="md:col-span-3 pb-4">
-                            <p className="text-lg">{descripcion}</p>
+                        <div className="border-t border-gray-300 pt-4 md:col-span-3 py-4">
+                            <TextFormat text={descripcion} />
                         </div>
                     )}
-                    {genero && (
+                    {genero.length > 0 && (
                         <div className="border-t border-gray-300 pt-4">
                             <span className="font-semibold">Géneros</span>
                             <ul className="flex flex-wrap mt-2">
-                                {genero.map((gen) => (
-                                    <li
-                                        key={gen.generoId}
-                                        className="mr-3 leading-5"
-                                    >
+                                {genero.map((gen, index) => (
+                                    <li key={gen.generoId}>
                                         {gen.generoName}
+                                        {index < genero.length - 1 && (
+                                            <span>,&nbsp;</span>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
@@ -118,24 +150,7 @@ const SalaDetail = () => {
                             <p className="text-black">{capacidad}</p>
                         </div>
                     )}
-                    {precios > 0 && (
-                        <div className="border-t border-gray-300 pt-4">
-                            <span className="font-semibold">Precio</span>
-                            <p className="text-black">{precios}€</p>
-                        </div>
-                    )}
-                    {direccion && (
-                        <div className="border-t border-gray-300 pt-4">
-                            <span className="font-semibold">Dirección</span>
-                            <p className="text-black">{direccion}</p>
-                        </div>
-                    )}
-                    {provincia && (
-                        <div className="border-t border-gray-300 pt-4">
-                            <span className="font-semibold">Provincia</span>
-                            <p className="text-black">{provincia}</p>
-                        </div>
-                    )}
+
                     {web && (
                         <div className="border-t border-gray-300 pt-4">
                             <span className="font-semibold">Web</span>
@@ -169,7 +184,7 @@ const SalaDetail = () => {
                     {condiciones && (
                         <div className="md:col-span-3 border-t border-gray-300 pt-4">
                             <span className="font-semibold">Condiciones</span>
-                            <p className="text-black">{condiciones}</p>
+                            <TextFormat text={condiciones} />
                         </div>
                     )}
 
@@ -187,16 +202,16 @@ const SalaDetail = () => {
                     {equipamiento && (
                         <div className="md:col-span-3 border-t border-gray-300 pt-4">
                             <span className="font-semibold">Equipamiento</span>
-                            <p>{equipamiento}</p>
+                            <TextFormat text={equipamiento} />
                         </div>
                     )}
                 </section>
 
-                <section>
-                    <h3 className="font-semibold">Fotos</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 items-start">
-                        {fotos.length > 0 ? (
-                            fotos.map((photo) => (
+                {fotos.length > 0 && (
+                    <section>
+                        <h3 className="font-semibold">Fotos</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 items-start">
+                            {fotos.map((photo) => (
                                 <div
                                     key={photo.id}
                                     className="rounded-lg overflow-hidden image-shadow"
@@ -207,15 +222,13 @@ const SalaDetail = () => {
                                         alt="Foto de la sala"
                                     />
                                 </div>
-                            ))
-                        ) : (
-                            <img
-                                className="col-span-1 md:col-span-2 rounded-3xl"
-                                src={Noimage}
-                                alt="No image"
-                            />
-                        )}
-                    </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                <section id="map" className="mt-8">
+                    {direccion && <MapComponent wholeAddress={wholeAddress} />}
                 </section>
 
                 {comentarios.length > 0 && (
@@ -278,19 +291,6 @@ const SalaDetail = () => {
                                 </Link>
                             </div>
                         ))}
-                    </section>
-                )}
-
-                {currentUser && (
-                    <section>
-                        <div className="flex justify-around mt-8 mb-12">
-                            <Link
-                                to={`/sala/${idSala}/reservas`}
-                                className="p-4 shadow-lg rounded bg-purple-600 text-white hover:scale-105 transition-all"
-                            >
-                                Reservar
-                            </Link>
-                        </div>
                     </section>
                 )}
                 {actualUser.roles === 'admin' && (

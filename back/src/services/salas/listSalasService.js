@@ -10,7 +10,10 @@ export async function listSalasService(filters) {
         salas.id, 
         salas.usuario_id, 
         salas.nombre, 
+        salas.ciudad,
         salas.createdAt,
+        salas.updatedAt,
+        (SELECT avatar FROM usuarios WHERE usuarios.id = salas.usuario_id) AS avatar,
         (SELECT provincia FROM provincias WHERE provincias.id = salas.provincia) AS provincia,
         (SELECT AVG(voto) FROM votos_salas WHERE votos_salas.salaVotada = salas.id) AS media_votos,
         (SELECT GROUP_CONCAT(generoId) FROM generos_salas WHERE generos_salas.salaId = salas.id) AS generos,
@@ -19,7 +22,7 @@ export async function listSalasService(filters) {
         salas 
     LEFT JOIN provincias ON provincias.id = salas.provincia
     LEFT JOIN generos_salas gs ON gs.salaId = salas.id
-    LEFT JOIN generos_musicales gm ON gs.generoId = gm.id        
+    LEFT JOIN generos_musicales gm ON gs.generoId = gm.id     
     WHERE 
         1=1
     `;
@@ -46,18 +49,21 @@ export async function listSalasService(filters) {
         queryParams.push(filters.provincia);
     }
 
-    query += ' GROUP BY salas.id';
+    query +=
+        ' GROUP BY salas.id, salas.nombre, salas.usuario_id, salas.provincia';
 
     // Ordenamiento por media de votos o nombre, dependiendo del filtro
     if (filters.order && filters.field) {
         const orderField =
-            filters.field === 'media_votos' ? 'media_votos' : 'salas.nombre';
+            filters.field === 'media_votos' ? 'media_votos' : 'salas.updatedAt';
+
         const orderDirection =
             filters.order.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+
         query += ` ORDER BY ${orderField} ${orderDirection}`;
     } else {
         // Orden por defecto (por media de votos descendente)
-        query += ' ORDER BY media_votos DESC';
+        query += ' ORDER BY media_votos DESC, updatedAt DESC';
     }
 
     // Paginación
@@ -103,7 +109,7 @@ export async function listSalasService(filters) {
 
     // Consulta para obtener las fotos agrupadas por sala
     const [photos] = await pool.query(`
-            SELECT id, name, salaId 
+            SELECT id, name, salaId, es_principal
             FROM sala_fotos
         `);
 
@@ -116,6 +122,7 @@ export async function listSalasService(filters) {
             acc[photo.salaId].push({
                 id: photo.id,
                 name: photo.name,
+                main: photo.es_principal,
             });
         }
         return acc;

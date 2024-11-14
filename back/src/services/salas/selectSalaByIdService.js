@@ -14,6 +14,7 @@ const selectSalaByIdService = async (idSala) => {
                 (SELECT provincia FROM provincias WHERE provincias.id = S.provincia) AS provincia,
                 (SELECT id FROM provincias WHERE provincias.id = S.provincia) AS provinciaId,
                 S.direccion,
+                S.ciudad,
                 S.precios,
                 S.capacidad,
                 S.descripcion,
@@ -75,7 +76,7 @@ const selectSalaByIdService = async (idSala) => {
 
     // Obtenemos el array de los archivos de la sala.
     const [photos] = await pool.query(
-        `SELECT id, name FROM sala_fotos WHERE salaId = ?`,
+        `SELECT id, name, es_principal FROM sala_fotos WHERE salaId = ?`,
         [idSala]
     );
     const fotos = [];
@@ -90,6 +91,7 @@ const selectSalaByIdService = async (idSala) => {
             : fotos.push({
                   name: photo.name,
                   id: photo.id,
+                  main: photo.es_principal,
               });
     }
 

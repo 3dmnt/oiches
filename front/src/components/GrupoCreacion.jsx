@@ -10,11 +10,9 @@ import { IoIosCloseCircleOutline } from 'react-icons/io';
 import FetchProvinciasService from '../services/FetchProvinciasService';
 import FetchGenresService from '../services/FetchGenresService';
 import registerGrupoService from '../services/registerGrupoService';
-
 const GrupoCreacion = () => {
     const { userLogged, token } = useContext(AuthContext);
     const navigate = useNavigate();
-
     const { userId } = useParams();
 
     const [formValues, setFormValues] = useState({
@@ -24,6 +22,7 @@ const GrupoCreacion = () => {
         generos: [],
         honorarios: '',
         honorarios_to: '',
+        condiciones: '',
         biografia: '',
         mediaA: '',
         mediaB: '',
@@ -70,7 +69,6 @@ const GrupoCreacion = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
         setFormValues({ ...formValues, [name]: value });
     };
 
@@ -138,15 +136,24 @@ const GrupoCreacion = () => {
                 formData,
             });
 
-            toast.success('Has creado tu nuevo artista/grupo con éxito');
-            navigate(`/users/account/${userId}`);
+            toast.success('Has creado tu nuevo proyecto musical con éxito');
+            setTimeout(() => {
+                navigate(`/users/account/${userId}`);
+            }, 3000);
         } catch (error) {
             setError(error.message);
             toast.error(error.message);
         }
     };
-    const { nombre, provincia, web, honorarios, honorarios_to, biografia } =
-        formValues;
+    const {
+        nombre,
+        provincia,
+        web,
+        honorarios,
+        honorarios_to,
+        condiciones,
+        biografia,
+    } = formValues;
 
     return (
         <>
@@ -269,6 +276,24 @@ const GrupoCreacion = () => {
                                 />
                             </label>
                         </div>
+                        <div className="flex flex-col mb-4 md:w-full">
+                            <label
+                                htmlFor="biografia"
+                                className="font-semibold"
+                            >
+                                Condiciones:
+                            </label>
+                            <textarea
+                                name="condiciones"
+                                value={condiciones}
+                                onChange={handleChange}
+                                className="form-textarea"
+                                maxLength="2000"
+                            ></textarea>
+                            <p className="mt-1 text-gray-500 text-sm">
+                                2000 caracteres como máximo
+                            </p>
+                        </div>
 
                         <div className="flex flex-col mb-4 md:w-full">
                             <label
@@ -288,6 +313,7 @@ const GrupoCreacion = () => {
                                 2000 caracteres como máximo
                             </p>
                         </div>
+
                         <section className="mb-8">
                             <p className="font-semibold mb-2">
                                 Enlaza tus videos:
@@ -312,6 +338,9 @@ const GrupoCreacion = () => {
                             <p className="font-semibold mb-2">
                                 Sube el Rider (.pdf)
                             </p>
+                            <p className="text-xs mb-3">
+                                (*) El tamaño del archivo no debe exceder 3Mb
+                            </p>
                             <div className="sect-photo">
                                 <span className="border-photos w-full h-20">
                                     {file ? (
@@ -335,8 +364,12 @@ const GrupoCreacion = () => {
                         </section>
 
                         <section className="mb-8 gap-2 flex flex-wrap">
-                            <p className="mb-2 font-semibold w-full">
+                            <p className="mb-1 font-semibold w-full">
                                 Fotos del artista/grupo
+                            </p>
+                            <p className="text-xs mb-3">
+                                (*) Archivos .jpeg, .png, .webp o .pdf con un
+                                tamaño máximo de 3Mb
                             </p>
                             {['A', 'B', 'C', 'D'].map((key) => (
                                 <div

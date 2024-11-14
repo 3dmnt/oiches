@@ -4,16 +4,20 @@ import GrupoFilter from '../components/GrupoFilter';
 import GrupoList from '../components/GrupoList';
 import FetchGruposService from '../services/FetchGruposService';
 import HeaderHero from '../components/HeaderHero.jsx';
+import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
-import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
-import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 import Seo from '../components/SEO/Seo.jsx'; // Importar el componente SEO
+import FeatureGridMusicos from '../components/FeatureGridMusicos.jsx';
+import Conectate from '../components/Conectate.jsx';
+import { IoFilter } from 'react-icons/io5';
+import Paginator from '../components/Paginator.jsx';
 
 const Grupos = () => {
     const [filteredGrupos, setFilteredGrupos] = useState([]);
     const [page, setPage] = useState(1); // Estado para la página actual
-    const pageSize = 8; // Tamaño de página
+    const pageSize = 12; // Tamaño de página
     const [total, setTotal] = useState(null); // Total de resultados
+    const [isNavOpen, setIsNavOpen] = useState(false);
     const [filters, setFilters] = useState({}); // Filtros activos
     const [error, setError] = useState(null);
 
@@ -42,12 +46,12 @@ const Grupos = () => {
         }
     };
 
-    // Cambiar de página sin afectar los filtros
-    const handlePageChange = (newPage) => {
-        setPage(newPage); // Actualiza la página actual
-    };
+    // // Cambiar de página sin afectar los filtros
+    // const handlePageChange = (newPage) => {
+    //     setPage(newPage); // Actualiza la página actual
+    // };
 
-    const totalPages = total ? Math.ceil(total / pageSize) : 0; // Calcula el total de páginas
+    // const totalPages = total ? Math.ceil(total / pageSize) : 0; // Calcula el total de páginas
 
     return (
         <>
@@ -63,50 +67,79 @@ const Grupos = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: '100%' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="container-grupos"
             >
                 <HeaderHero />
-                <div className="hero bg-hero-grupos bg-cover relative before:content-[''] before:bg-white/[.10] before:absolute before:w-full before:h-full">
-                    <h1 className="hero-title text-white">
-                        Encuentra a los músicos ideales para tu sala
-                    </h1>
-                    <p className="hero-subtitle text-white">
-                        Explora diversos talentos, conecta con ellos y llena tu
-                        espacio con música en vivo.
-                    </p>
-                </div>
-                <div className="grupo-filter-form-container">
-                    <GrupoFilter onFilterChange={handleFilterChange} />
-                </div>
-                <div className="grupo-list-container">
-                    {!error &&
-                        (filteredGrupos.length > 0 ? (
-                            <GrupoList grupos={filteredGrupos} />
-                        ) : (
-                            <p>No se encontraron músicos</p>
-                        ))}
-                </div>
 
-                {/* Controles de paginación */}
-                {totalPages > 1 && (
-                    <div className="flex gap-3 justify-center my-16">
-                        <button
-                            disabled={page === 1}
-                            onClick={() => handlePageChange(page - 1)} // Cambiar de página sin modificar los filtros
-                        >
-                            <MdKeyboardDoubleArrowLeft className="text-xl" />
-                        </button>
-                        <p>
-                            {page} de {totalPages}
+                <section className="hero relative flex flex-col justify-center items-start bg-hero-grupos bg-cover bg-center md:h-[680px] p-8 md:p-16">
+                    <div className="text-left max-w-lg mr-auto">
+                        <h1 className="text-white text-4xl md:text-5xl font-bold leading-tight">
+                            Encuentra a los músicos ideales
+                        </h1>
+                        <p className="text-white text-lg md:text-xl mt-4 mb-3 max-[600px]:hidden">
+                            Explora diversos talentos, conecta con ellos y llena
+                            tu sala con música en vivo.
                         </p>
-                        <button
-                            disabled={page >= totalPages}
-                            onClick={() => handlePageChange(page + 1)} // Cambiar de página sin modificar los filtros
-                        >
-                            <MdKeyboardDoubleArrowRight className="text-xl" />
-                        </button>
+                        <p className="text-white text-2xl md:text-3xl font-semibold mt-0.25 mb-8">
+                            ¡Vive la música en cada rincón!
+                        </p>
+                        <div className="flex gap-4">
+                            <Link
+                                to="/register"
+                                className="bg-purpleOiches hover:bg-moradoOiches text-white font-bold py-2 px-6 rounded-lg transition-transform hover:scale-105"
+                            >
+                                Regístrate
+                            </Link>
+                        </div>
                     </div>
-                )}
+                </section>
+                <section>
+                    <div
+                        className="flex justify-center p-2 gap-4 bg-footercolor text-white md:hidden"
+                        onClick={() => setIsNavOpen((prev) => !prev)}
+                    >
+                        FILTRAR
+                        <IoFilter className="text-2xl cursor-pointer" />
+                    </div>
+                    <div
+                        className={`bg-footercolor flex-col items-center justify-evenly ${
+                            isNavOpen ? 'flex' : 'hidden md:flex'
+                        }`}
+                    >
+                        <div className="flex flex-col items-center justify-between w-4/5">
+                            <GrupoFilter onFilterChange={handleFilterChange} />
+                        </div>
+                    </div>
+                </section>
+
+                <main className="w-11/12 mx-auto mt-6 mb-20 md:max-w-7xl md:mb-28">
+                    <section className="grupo-list-container">
+                        {!error &&
+                            (filteredGrupos.length > 0 ? (
+                                <GrupoList grupos={filteredGrupos} />
+                            ) : (
+                                <p className="text-center">
+                                    No se encontraron músicos
+                                </p>
+                            ))}
+
+                        <Paginator
+                            setPage={setPage}
+                            page={page}
+                            total={total}
+                            pageSize={pageSize}
+                        />
+                    </section>
+
+                    {/* Sección de características para músicos*/}
+                    <section className="flex flex-col gap-8 mt-20 mx-4 md:mt-28">
+                        <FeatureGridMusicos />
+                    </section>
+
+                    {/* Sección de Conectate */}
+                    <section className="mt-20 mx-4 flex flex-col justify-between items-center gap-16 md:flex-row md:mt-28">
+                        <Conectate />
+                    </section>
+                </main>
                 <Footer />
             </motion.div>
         </>

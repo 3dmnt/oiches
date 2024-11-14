@@ -6,7 +6,11 @@ export default {
             colors: {
                 yellowOiches: '#FFB500',
                 purpleOiches: '#9333FF',
+                purpleClaro: '#A775F7',
                 greyOiches: '#8591A5',
+                orangecolor: '#FFBC8E',
+                moradoOiches: '#A33ABD',
+                footercolor: '#1f2937',
             },
 
             backgroundImage: {
@@ -16,6 +20,8 @@ export default {
                 'hero-salas': "url('/salas-hero.webp')",
                 'hero-home': "url('/hero-home.jpg')",
                 'hero-oiches': "url('/hero-oiches.webp')",
+                'hero-maintenance': "url('/oiches-maintenance.jpg')",
+                'hero-contacto': "url('/Oiches-contacto.jpg')",
             },
             background404: {
                 'oiches-404': "url('/oiches/front/src/assets/404Pages.jpg')",

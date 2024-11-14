@@ -5,11 +5,12 @@ const listSalasController = async (req, res, next) => {
         const filters = {
             nombre: req.query.nombre || '',
             genero: req.query.genero || '',
+            ciudad: req.query.ciudad || '',
             provincia: req.query.provincia || '',
             field: ['media_votos', 'updatedAt'],
             order: req.query.order || 'DESC',
             page: req.query.page || 1,
-            pageSize: req.query.pageSize || 8,
+            pageSize: req.query.pageSize || 12,
         };
 
         const salas = await listSalasService(filters);

@@ -17,6 +17,7 @@ const selectGrupoByIdService = async (idGrupo) => {
                 (SELECT avatar FROM usuarios WHERE usuarios.id = G.usuario_id) AS avatar,
                 G.honorarios,
                 G.honorarios_to,
+                G.condiciones,
                 G.biografia,
                 G.usuario_id,
                 AVG(IFNULL(V.voto, 0)) AS votes,
@@ -73,7 +74,7 @@ const selectGrupoByIdService = async (idGrupo) => {
 
     // Obtenemos el array de fotos de la entrada.
     const [photos] = await pool.query(
-        `SELECT id, name FROM grupo_fotos WHERE grupoId = ?`,
+        `SELECT id, name, es_principal FROM grupo_fotos WHERE grupoId = ?`,
         [idGrupo]
     );
     const fotos = [];
@@ -88,6 +89,7 @@ const selectGrupoByIdService = async (idGrupo) => {
             : fotos.push({
                   name: photo.name,
                   id: photo.id,
+                  main: photo.es_principal,
               });
     }
 

@@ -1,11 +1,12 @@
 import selectSalaByIdService from '../../services/salas/selectSalaByIdService.js';
 import insertSalaPhotoService from '../../services/salas/insertSalaPhotoService.js';
+import { updateMainSalaPhotoService } from '../../services/salas/insertSalaPhotoService.js';
 import { uploadFiles } from '../../utils/uploadFiles.js';
 import validateSchemaUtil from '../../utils/validateSchemaUtil.js';
 import addSalaPhotoSchema from '../../schemas/salas/addSalaPhotoSchema.js';
 import generateErrorsUtil from '../../utils/generateErrorsUtil.js';
 
-const insertPhotosSalaController = async (req, res, next) => {
+export const insertPhotosSalaController = async (req, res, next) => {
     try {
         const { idSala } = req.params;
 
@@ -16,8 +17,6 @@ const insertPhotosSalaController = async (req, res, next) => {
         );
 
         const sala = await selectSalaByIdService(idSala);
-
-        console.log('sal ', sala.fotos.length);
 
         // Array donde pushearemos las fotos (si hay).
         const photos = [];
@@ -39,7 +38,7 @@ const insertPhotosSalaController = async (req, res, next) => {
             // Recorremos las fotos. Para evitar que tenga más de 4 fotos aplicamos slice.
             for (const photo of Object.values(req.files).slice(0, 4)) {
                 // Guardamos la foto y obtenemos su nombre. Redimensionamos a un ancho de 600px.
-                const photoName = await uploadFiles(photo, 600);
+                const photoName = await uploadFiles(photo, 1000);
 
                 // Insertamos la foto en la tabla de fotos.
                 await insertSalaPhotoService(photoName, idSala);
@@ -53,11 +52,25 @@ const insertPhotosSalaController = async (req, res, next) => {
 
         res.send({
             status: 'ok',
-            message: 'Foto Subida',
+            message: 'Foto subida',
         });
     } catch (error) {
         next(error);
     }
 };
 
-export default insertPhotosSalaController;
+export const setMainPhotoController = async (req, res, next) => {
+    try {
+        const { idSala, photoId } = req.params;
+
+        // Llama al servicio para actualizar la foto principal.
+        await updateMainSalaPhotoService(photoId, idSala);
+
+        res.send({
+            status: 'ok',
+            message: 'Foto principal actualizada correctamente',
+        });
+    } catch (error) {
+        next(error);
+    }
+};

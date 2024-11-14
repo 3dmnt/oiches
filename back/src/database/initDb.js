@@ -61,6 +61,7 @@ const main = async () => {
             descripcion TEXT,
             precios INT,
             direccion VARCHAR(255) NOT NULL,
+            ciudad VARCHAR(255) NOT NULL,
             condiciones TEXT,
             equipamiento TEXT,
             web VARCHAR(255),
@@ -94,6 +95,7 @@ const main = async () => {
                 web VARCHAR(255),
                 honorarios INT,
                 honorarios_to INT,
+                condiciones TEXT,
                 biografia TEXT,
                 usuario_id CHAR(36) NOT NULL,
                 FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
@@ -121,6 +123,7 @@ const main = async () => {
                     id CHAR(36) PRIMARY KEY NOT NULL,
                     name VARCHAR(100) NOT NULL,
                     salaId CHAR(36) NOT NULL,
+                    es_principal BOOLEAN DEFAULT FALSE,
                     FOREIGN KEY (salaId) REFERENCES salas(id),
                     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
             );
@@ -131,6 +134,7 @@ const main = async () => {
                     id CHAR(36) PRIMARY KEY NOT NULL,
                     name VARCHAR(100) NOT NULL,
                     grupoId CHAR(36) NOT NULL,
+                    es_principal BOOLEAN DEFAULT FALSE,
                     FOREIGN KEY (grupoId) REFERENCES grupos(id),
                     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
             );
