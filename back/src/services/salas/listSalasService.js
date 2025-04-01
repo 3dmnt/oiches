@@ -11,6 +11,7 @@ export async function listSalasService(filters) {
         salas.usuario_id, 
         salas.nombre, 
         salas.ciudad,
+        salas.published,
         salas.createdAt,
         salas.updatedAt,
         (SELECT avatar FROM usuarios WHERE usuarios.id = salas.usuario_id) AS avatar,
@@ -23,8 +24,7 @@ export async function listSalasService(filters) {
     LEFT JOIN provincias ON provincias.id = salas.provincia
     LEFT JOIN generos_salas gs ON gs.salaId = salas.id
     LEFT JOIN generos_musicales gm ON gs.generoId = gm.id     
-    WHERE 
-        1=1
+    WHERE 1=1 AND salas.published = 1
     `;
 
     const queryParams = [];

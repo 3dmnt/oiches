@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { useContext } from 'react';
-import { AuthContext } from '../context/auth/auth.context';
+import AuthContext from '../context/auth/AuthContext';
 import logoWhite from '../assets/Horizontal_blanco.webp';
 import { FaEnvelope } from 'react-icons/fa6';
 import { FaInstagram } from 'react-icons/fa';
@@ -110,7 +110,7 @@ const Footer = () => {
                         </NavLink>
                     </div>
                     <p className="flex items-start justify-start gap-2 mt-8">
-                        <FaRegCopyright /> 2024 - Todos los derechos reservados
+                        <FaRegCopyright /> 2025 - Todos los derechos reservados
                     </p>
                 </div>
             </div>

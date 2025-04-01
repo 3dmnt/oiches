@@ -6,7 +6,6 @@ import {
     userExists,
     grupoExists,
     canEditGrupo,
-    hasOneGroup,
     checkIfGroup,
 } from '../middleware/index.js';
 
@@ -25,6 +24,7 @@ import {
     addPhotosGrupoController,
     deleteGrupoController,
     setMainPhotoController,
+    nextPrevGrupoController,
 } from '../controllers/grupos/index.js';
 
 const router = express.Router();
@@ -35,13 +35,12 @@ router.post(
     authUser,
     userExists,
     checkIfGroup,
-    hasOneGroup,
     createGrupoController
 );
 
 // Actualizar un grupo
 router.put(
-    '/grupos/:idGrupo/edit',
+    '/grupo/:idGrupo/edit',
     authUser,
     userExists,
     grupoExists,
@@ -133,4 +132,8 @@ router.get('/grupos/:idGrupo', grupoExists, getGrupoDetailController);
 
 // Endpoint listado de grupos con filtro, búsqueda y ordenación
 router.get('/grupos?', listGruposController);
+
+// Endpoint para navegador post (agencia anterior/siguiente)
+router.get('/grupo/:idGrupo/prevnext', grupoExists, nextPrevGrupoController);
+
 export default router;

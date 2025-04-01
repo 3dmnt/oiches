@@ -19,13 +19,16 @@ import {
     getUserGrupoSalaController,
     getUserByIdController,
     accountUserController,
-    // selectUserByNameController
+    addToMailchimpController,
 } from '../controllers/users/index.js';
 
 const router = express.Router();
 
 // Endpoint registro de usuarios
 router.post('/users/registro', registerUserController);
+
+// Endpoint para añadir a Mailchimp en el registro
+router.post('/add-to-mailchimp', addToMailchimpController);
 
 //Endpoint validación de usuarios
 router.get('/users/validate/:registrationCode', validateUserController);
@@ -58,8 +61,6 @@ router.get(
 
 // Perfil de cada usuario
 router.get('/users/info/:userId', getUserByIdController);
-
-// router.get('/users/chat/:name', authUser, selectUserByNameController);
 
 // Listado de salas o grupos del usuario
 router.get(

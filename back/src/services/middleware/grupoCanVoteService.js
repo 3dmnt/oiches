@@ -7,9 +7,9 @@ const grupoCanVoteService = async (idReserva, userId) => {
     // Comprobar que la reserva existe, esté confirmada y que la fecha de reserva ya pasó
     const [reserva] = await pool.query(
         `
-                    SELECT * FROM reservas WHERE id=? AND reservas.confirmada=?
-                `,
-        [idReserva, 1]
+            SELECT * FROM reservas WHERE id=? AND reservas.confirmada=?
+        `,
+        [idReserva, '1']
     );
 
     if (!reserva.length) {
@@ -31,8 +31,8 @@ const grupoCanVoteService = async (idReserva, userId) => {
 
     // Comprobar que el usuario tenga ese grupo
     const [grupoOwner] = await pool.query(
-        `SELECT id FROM grupos WHERE usuario_id = ?`,
-        [userId]
+        `SELECT id FROM grupos WHERE usuario_id = ? AND id = ?`,
+        [userId, reserva[0].grupo_id]
     );
 
     if (grupoOwner[0].id !== reserva[0].grupo_id)

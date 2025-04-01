@@ -6,9 +6,9 @@ const getUserGrupoSalaService = async (name) => {
         // Consulta para grupos con sus fotos
         const [grupos] = await pool.query(
             `SELECT g.*, gf.name AS foto_url 
-       FROM grupos g 
-       LEFT JOIN grupo_fotos gf ON g.id = gf.grupoId 
-       WHERE g.nombre LIKE ?`,
+                FROM grupos g 
+                LEFT JOIN grupo_fotos gf ON g.id = gf.grupoId 
+                WHERE g.nombre LIKE ?`,
             [`${name}%`]
         );
         // Agrupar resultados de grupos
@@ -51,15 +51,14 @@ const getUserGrupoSalaService = async (name) => {
         // Convertir el Map a un array y obtener el primer grupo
         if (gruposMap.size > 0) {
             const resultado = Array.from(gruposMap.values())[0]; // Obtiene el primer grupo
-            console.log(resultado);
             return resultado;
         }
         // Si no se encontró un grupo, consulta para salas
         const [salas] = await pool.query(
             `SELECT s.*, sf.name AS foto_url 
-       FROM salas s 
-       LEFT JOIN sala_fotos sf ON s.id = sf.salaId 
-       WHERE s.nombre LIKE ?`,
+                FROM salas s 
+                LEFT JOIN sala_fotos sf ON s.id = sf.salaId 
+                WHERE s.nombre LIKE ?`,
             [`${name}%`]
         );
         // Agrupar resultados de salas

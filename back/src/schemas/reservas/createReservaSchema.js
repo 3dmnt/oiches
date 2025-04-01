@@ -8,21 +8,13 @@ import joiErrorMessages from '../joiErrorMessages.js';
 
 // Creamos el esquema de Joi donde comprobamos todas las propiedades necesarias.
 const newUserSchema = Joi.object({
+    project: Joi.string().optional().max(40).messages(joiErrorMessages),
     fecha: Joi.date().required().messages(joiErrorMessages),
-    horaInicio: Joi.string()
-        .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
-        .required()
-        .messages({
-            'string.pattern.base':
-                'El campo de hora debe estar en formato HH:mm',
-        }),
-    horaFin: Joi.string()
-        .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
-        .required()
-        .messages({
-            'string.pattern.base':
-                'El campo de hora debe estar en formato HH:mm',
-        }),
+    flexible: Joi.optional().messages(joiErrorMessages),
+    message: Joi.string().required().max(1000).messages({
+        'string.empty': 'El campo "Mensaje" no puede estar vacio.',
+        'string.max': 'El mensaje no debe exceder los {#limit} caracteres.',
+    }),
 });
 
 export default newUserSchema;

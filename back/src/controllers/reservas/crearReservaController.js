@@ -4,12 +4,11 @@ import createReservaSchema from '../../schemas/reservas/createReservaSchema.js';
 import generateErrorsUtil from '../../utils/generateErrorsUtil.js';
 const crearReservaController = async (req, res, next) => {
     try {
-        const { fecha, horaInicio, horaFin } = req.body;
+        const { project, fecha, flexible, message } = req.body;
 
         // Validación con JOI
         await validateSchemaUtil(createReservaSchema, req.body);
 
-        const { id } = req.user;
         const { sala_id } = req.params;
         if (!sala_id) {
             throw generateErrorsUtil(
@@ -20,7 +19,13 @@ const crearReservaController = async (req, res, next) => {
 
         const {
             reserva: { grupoResults, salaResults },
-        } = await crearReservaService(fecha, horaInicio, horaFin, id, sala_id);
+        } = await crearReservaService(
+            project,
+            fecha,
+            flexible,
+            message,
+            sala_id
+        );
 
         if (!grupoResults || grupoResults.length === 0) {
             throw generateErrorsUtil(
@@ -37,8 +42,6 @@ const crearReservaController = async (req, res, next) => {
             message: 'Reserva realizada con éxito',
             reserva: {
                 fecha,
-                horaInicio,
-                horaFin,
                 sala_id,
                 grupo_id,
             },

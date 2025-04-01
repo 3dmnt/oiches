@@ -2,10 +2,10 @@ import { motion } from 'framer-motion';
 import HeaderHero from '../components/HeaderHero.jsx';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import SalaCard from '../components/SalaCard.jsx';
+import SalaCard from '../components/Salas/SalaCard.jsx';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import GrupoCard from '../components/GrupoCard.jsx';
+import GrupoCard from '../components/Grupos/GrupoCard.jsx';
 import SliderMulti from '../components/SliderMulti.jsx';
 import Footer from '../components/Footer.jsx';
 import Toastify from '../components/Toastify.jsx';
@@ -49,17 +49,36 @@ const Home = () => {
     return (
         <>
             <Seo
-                title="Oiches - Conecta Músicos y Salas de Conciertos"
-                description="Descubre los músicos mejor valorados y las salas de conciertos más populares en Oiches. Vive la mejor música en vivo y organiza eventos musicales inolvidables."
-                keywords="músicos, salas de conciertos, música en vivo, eventos musicales"
+                title="Oiches - Músicos y Salas de Conciertos Destacados"
+                description="Explora los músicos mejor valorados y las salas más votadas en Oiches. Conecta con talentos y escenarios perfectos para disfrutar la mejor música en vivo."
+                keywords="músicos, bandas, salas de conciertos, eventos musicales"
                 url="https://oiches.com"
-                image="https://oiches.com/assets/Oiches-Conectamos-musicos-y-salas.jpg"
+                image="https://oiches.com/Oiches-Conectamos-musicos-y-salasRRSS.jpg"
                 type="website"
+                structuredData={{
+                    '@context': 'https://schema.org',
+                    '@type': 'ItemList',
+                    itemListElement: [
+                        ...grupos.map((grupo, index) => ({
+                            '@type': 'ListItem',
+                            position: index + 1,
+                            name: grupo.nombre,
+                            url: `https://oiches.com/grupos/${grupo.id}`,
+                        })),
+                        ...salas.map((sala, index) => ({
+                            '@type': 'ListItem',
+                            position: grupos.length + index + 1,
+                            name: sala.nombre,
+                            url: `https://oiches.com/salas/${sala.id}`,
+                        })),
+                    ],
+                }}
             />
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
+                className="overflow-hidden"
             >
                 <HeaderHero />
 
