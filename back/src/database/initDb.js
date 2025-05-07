@@ -217,8 +217,27 @@ const main = async () => {
                 FOREIGN KEY(usuario_id) REFERENCES usuarios(id),
                 createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                );
-            `);
+            );
+        `);
+
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS conciertos (
+                id CHAR(36) PRIMARY KEY NOT NULL,
+                reservaId CHAR(36),
+                title TEXT(255),
+                fecha DATE NOT NULL,
+                hora TIME NOT NULL,
+                precioAnticipada DECIMAL(10, 2),
+                precio DECIMAL(10, 2),
+                otroTipoEntrada TEXT(100),
+                description LONGTEXT,
+                link VARCHAR(255),
+                salaLink VARCHAR(255),
+                poster VARCHAR(100) NOT NULL,
+                createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (reservaId) REFERENCES reservas(id)
+            );
+        `);
 
         await pool.query(`
             INSERT INTO generos_musicales (nombre) VALUES
@@ -249,28 +268,13 @@ const main = async () => {
                 ('Versiones'),
                 ('Fado'),
                 ('Rancheras'),
-                ('Rumba'),
-                ('Cumbia');
+                ('Rumba'),('Cumbia'), ('Góspel'), ('Músicas del mundo'), ('Músicas urbanas');
         `);
 
         await pool.query(`
             INSERT INTO provincias (provincia) VALUES
-            ('A Coruña'), ('Álava'), ('Albacete'), ('Alicante'), ('Almería'), ('Asturias'), ('Ávila'), ('Badajoz'), ('Baleares'), ('Barcelona'), ('Burgos'), ('Cáceres'), ('Cádiz'), ('Cantabria'), ('Castellón'), ('Ciudad Real'), ('Córdoba'), ('Cuenca'), ('Girona'), ('Granada'), ('Guadalajara'), ('Guipúzcoa'), ('Huelva'), ('Huesca'), ('Jaén'), ('La Rioja'), ('Las Palmas'), ('León'), ('Lleida'), ('Lugo'), ('Madrid'), ('Málaga'), ('Murcia'), ('Navarra'), ('Ourense'), ('Palencia'), ('Pontevedra'), ('Salamanca'), ('Segovia'), ('Sevilla'), ('Soria'), ('Tarragona'), ('Santa Cruz de Tenerife'), ('Teruel'), ('Toledo'), ('Valencia'), ('Valladolid'), ('Vizcaya'), ('Zamora'), ('Zaragoza')
+            ('A Coruña'), ('Álava'), ('Albacete'), ('Alicante'), ('Almería'), ('Asturias'), ('Ávila'), ('Badajoz'), ('Baleares'), ('Barcelona'), ('Burgos'), ('Cáceres'), ('Cádiz'), ('Cantabria'), ('Castellón'), ('Ciudad Real'), ('Córdoba'), ('Cuenca'), ('Girona'), ('Granada'), ('Guadalajara'), ('Guipúzcoa'), ('Huelva'), ('Huesca'), ('Jaén'), ('La Rioja'), ('Las Palmas'), ('León'), ('Lleida'), ('Lugo'), ('Madrid'), ('Málaga'), ('Murcia'), ('Navarra'), ('Ourense'), ('Palencia'), ('Pontevedra'), ('Salamanca'), ('Segovia'), ('Sevilla'), ('Soria'), ('Tarragona'), ('Santa Cruz de Tenerife'), ('Teruel'), ('Toledo'), ('Valencia'), ('Valladolid'), ('Vizcaya'), ('Zamora'), ('Zaragoza'), ('Ceuta'), ('Melilla');
         
-        `);
-
-        await pool.query(`
-            CREATE TABLE IF NOT EXISTS conciertos (
-                id CHAR(36) PRIMARY KEY NOT NULL,
-                reservaId CHAR(36) NOT NULL,
-                fecha DATE NOT NULL,
-                hora TIME NOT NULL,
-                precio DECIMAL(10, 2),
-                link VARCHAR(255),
-                poster VARCHAR(100) NOT NULL,
-                createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (reservaId) REFERENCES reservas(id)
-            );
         `);
 
         console.log('¡Tablas creadas!');
