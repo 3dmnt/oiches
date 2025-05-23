@@ -6,6 +6,7 @@ import useAuth from '../../hooks/useAuth.jsx';
 import Seo from '../SEO/Seo.jsx';
 import MapShow from '../MapShow.jsx';
 import TarjetaEvento from './TarjetaEvento.jsx';
+import ShareButtons from '../Elements/ShareButtons.jsx';
 
 const ConciertoDetail = () => {
     const { VITE_API_URL_BASE } = import.meta.env;
@@ -97,7 +98,7 @@ const ConciertoDetail = () => {
                 keywords={`conciertos, ${sala}, ${
                     artista && artista.length > 0 && { artista }
                 }, ${provincia}, ${ciudad}, música en vivo, eventos`}
-                url={`https://oiches.com/concierto/${conciertoId}`}
+                url={`/concierto/${conciertoId}`}
                 image={`${VITE_API_URL_BASE}/uploads/${poster}`}
                 imageAlt="Imagen del concierto"
             />
@@ -107,11 +108,21 @@ const ConciertoDetail = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-900 mx-auto md:gap-8 md:mb-8">
                     {/* Columna izquierda: Información */}
                     <div className="py-4 flex flex-col  justify-center">
-                        <h1 className="text-3xl font-bold text-gray-800 mb-6 md:text-4xl">
+                        <h1 className="text-3xl font-bold text-gray-800 mb-3 md:text-4xl">
                             {artista && artista.length > 0
                                 ? `${artista} en concierto`
                                 : title}
                         </h1>
+
+                        <div className="mb-4">
+                            <ShareButtons 
+                                url={`/concierto/${conciertoId}`} 
+                                title={artista && artista.length > 0 ? `${artista} en concierto en ${sala}` : title}
+                                description={`Concierto en ${sala} (${ciudad}) el ${formattedDate.dia} de ${formattedDate.mes} de ${formattedDate.anio}.`}
+                                image={poster ? `${VITE_API_URL_BASE}/uploads/${poster}` : null}
+                                size="sm"
+                            />
+                        </div>
 
                         {/* Tarjeta de evento */}
                         <section className="mb-6">

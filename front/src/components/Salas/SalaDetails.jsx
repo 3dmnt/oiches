@@ -11,6 +11,7 @@ import MapShow from '../MapShow.jsx';
 import usePrevNext from '../../hooks/usePrevNext.jsx';
 import NextPreviousItem from '../Elements/NextPreviousItem.jsx';
 import EditPublishItemAdmin from '../Admin/EditPublishItemAdmin.jsx';
+import ShareButtons from '../Elements/ShareButtons.jsx';
 
 const SalaDetail = () => {
     const { VITE_API_URL_BASE } = import.meta.env;
@@ -67,29 +68,24 @@ const SalaDetail = () => {
 
     const firstImage =
         fotos.find((foto) => foto.main === 1)?.name || fotos[0]?.name;
+        
+    // Crear la URL completa de la imagen para SEO
+    const imageForSeo = firstImage 
+        ? `${VITE_API_URL_BASE}/uploads/${firstImage}` 
+        : usuarioAvatar 
+            ? `${VITE_API_URL_BASE}/uploads/${usuarioAvatar}` 
+            : DefaultProfile;
 
     return published === 1 || actualUser.roles === 'admin' ? (
         <>
             {/* Integración del componente Seo con datos dinámicos */}
             <Seo
-                title={`${nombre} - Sala de Conciertos en ${provincia}`}
-                description={`Descubre la sala ${nombre} en ${provincia}. ${
-                    descripcion
-                        ? descripcion.length > 160
-                            ? descripcion.slice(0, 157).trim() + '...'
-                            : descripcion
-                        : 'Conoce más sobre esta sala.'
-                } Capacidad: ${capacidad} personas.`}
-                keywords={`sala de conciertos, ${nombre}, ${provincia}, música en vivo, eventos`}
-                url={`https://oiches.com/sala/${idSala}`}
-                image={
-                    firstImage
-                        ? `${VITE_API_URL_BASE}/uploads/${firstImage}`
-                        : usuarioAvatar
-                        ? `${VITE_API_URL_BASE}/uploads/${usuarioAvatar}`
-                        : DefaultProfile
-                }
-                imageAlt={`Imagen de ${nombre}`}
+                title={entry.nombre}
+                description={`Descubre ${entry.nombre}, ${entry.descripcion}. Consulta su rider, backline y próximos eventos.`}
+                keywords={`${entry.nombre}, sala de conciertos, música en vivo, ${entry.ciudad}, ${entry.provincia}`}
+                url={`/sala/${idSala}`}
+                image={imageForSeo}
+                type="profile"
             />
 
             <main className="p-4 mt-6 flex flex-col gap-6 mx-auto shadow-xl w-11/12 md:max-w-1200 md:px-24">
@@ -108,6 +104,14 @@ const SalaDetail = () => {
                     <h2 className="text-3xl font-bold mt-6 text-left mb-2">
                         {nombre}
                     </h2>
+                    <div className="mb-4">
+                        <ShareButtons 
+                            url={`/sala/${idSala}`} 
+                            title={nombre} 
+                            description={descripcion ? descripcion.slice(0, 150) : `Sala de conciertos en ${provincia}`} 
+                            image={imageForSeo}
+                        />
+                    </div>
                     <div className="flex flex-wrap gap-6">
                         {direccion && (
                             <>

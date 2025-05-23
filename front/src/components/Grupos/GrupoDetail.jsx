@@ -14,6 +14,7 @@ import TextFormat from '../TextFormato.jsx';
 import usePrevNext from '../../hooks/usePrevNext.jsx';
 import NextPreviousItem from '../Elements/NextPreviousItem.jsx';
 import EditPublishItemAdmin from '../Admin/EditPublishItemAdmin.jsx';
+import ShareButtons from '../Elements/ShareButtons.jsx';
 
 const GrupoDetail = () => {
     const { VITE_API_URL_BASE } = import.meta.env;
@@ -90,7 +91,7 @@ const GrupoDetail = () => {
                 keywords={`músico, ${nombre}, ${genero
                     ?.map((g) => g.generoName)
                     .join(', ')}, música en vivo, conciertos`}
-                url={`https://oiches.com/grupo/${idGrupo}`}
+                url={`/grupo/${idGrupo}`}
                 image={
                     firstImage
                         ? `${VITE_API_URL_BASE}/uploads/${firstImage}`
@@ -124,6 +125,21 @@ const GrupoDetail = () => {
                         <h2 className="text-3xl font-bold mt-4 text-center md:text-left">
                             {nombre}
                         </h2>
+                        <div className="my-2">
+                            <ShareButtons 
+                                url={`/grupo/${idGrupo}`} 
+                                title={nombre} 
+                                description={biografia ? biografia.slice(0, 150) : `Grupo de música en ${provincia}`} 
+                                image={
+                                    firstImage
+                                        ? `${VITE_API_URL_BASE}/uploads/${firstImage}`
+                                        : avatar
+                                        ? `${VITE_API_URL_BASE}/uploads/${avatar}`
+                                        : DefaultProfile
+                                }
+                                size="sm"
+                            />
+                        </div>
                     </div>
                     {actualUser.roles === 'sala' && (
                         <div className="m-auto flex flex-col gap-4 shadow-[0_8px_10px_4px_rgba(0,0,0,0.07)] p-4 items-center rounded-2xl md:mr-0 md:mb-0 md:max-w-80">

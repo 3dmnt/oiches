@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "prerender-node": "^3.8.0"
+  }
+}

@@ -8,6 +8,7 @@ import TextFormat from '../TextFormato.jsx';
 import usePrevNext from '../../hooks/usePrevNext.jsx';
 import NextPreviousItem from '../Elements/NextPreviousItem.jsx';
 import EditPublishItemAdmin from '../Admin/EditPublishItemAdmin.jsx';
+import ShareButtons from '../Elements/ShareButtons.jsx';
 
 const AgenciaDetails = () => {
     const { VITE_API_URL_BASE } = import.meta.env;
@@ -50,18 +51,12 @@ const AgenciaDetails = () => {
     return published === 1 || actualUser.roles === 'admin' ? (
         <>
             <Seo
-                title={`${nombre} - Agencia de músicos en ${provincia}`}
-                description={`Descubre la agencia ${nombre} en ${provincia}. ${
-                    descripcion
-                        ? descripcion.length > 160
-                            ? descripcion.slice(0, 157).trim() + '...'
-                            : descripcion
-                        : 'Conoce más sobre la agencia.'
-                }`}
-                keywords={`agencia, manager, ${nombre}, ${provincia}, música en vivo, eventos`}
-                url={`https://oiches.com/agencia/${idAgencia}`}
-                image={imageUrl}
-                imageAlt={`Imagen de la agencia ${nombre}`}
+                title={agencia.nombre}
+                description={agencia.descripcion}
+                keywords={`${agencia.nombre}, ${agencia.especialidad}, agencia musical, manager, ${agencia.provincia}`}
+                url={`/agencia/${idAgencia}`}
+                image={agencia.avatar ? `${VITE_API_URL_BASE}/uploads/${agencia.avatar}` : noImage}
+                type="profile"
             />
 
             <main className="p-4 mt-6 flex flex-col gap-6 mx-auto shadow-xl w-11/12 md:max-w-1200 md:px-24">
@@ -77,6 +72,16 @@ const AgenciaDetails = () => {
                     <h2 className="text-3xl font-bold mt-6 text-left mb-2">
                         {nombre}
                     </h2>
+                    
+                    <div className="mb-4">
+                        <ShareButtons 
+                            url={`/agencia/${idAgencia}`} 
+                            title={nombre} 
+                            description={descripcion ? descripcion.slice(0, 150) : `Agencia musical en ${provincia}`} 
+                            image={avatar ? `${VITE_API_URL_BASE}/uploads/${avatar}` : DefaultProfile}
+                            size="sm"
+                        />
+                    </div>
 
                     <ul className="flex flex-wrap">
                         {agenciaEspecialidad.map((espc, index) => (

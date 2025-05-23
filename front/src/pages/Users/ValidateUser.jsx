@@ -62,7 +62,7 @@ export const ValidateUser = () => {
             <Seo
                 title="Validar Usuario - Oiches"
                 description="Valida tu usuario en Oiches para disfrutar de todas las funcionalidades de la plataforma."
-                url="https://oiches.com/validate-user"
+                url="/validate-user" // URL relativa
                 keywords="validar usuario, Oiches, activación de cuenta"
                 noIndex={true} // No indexar esta página
             />

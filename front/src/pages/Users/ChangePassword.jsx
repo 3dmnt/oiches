@@ -5,13 +5,15 @@ import ChangePasswordForm from '../../components/Users/ChangePasswordForm';
 import Seo from '../../components/SEO/Seo';
 
 const ChangePassword = () => {
+    const appBaseUrl = import.meta.env.VITE_APP_URL || 'https://oiches.com';
+
     return (
         <>
             {/* Configuración de SEO */}
             <Seo
                 title="Cambiar Contraseña - Oiches"
                 description="Página para cambiar tu contraseña de acceso en Oiches. Sigue los pasos para restablecerla."
-                url="https://oiches.com/change-password"
+                url="/change-password" // URL relativa
                 noIndex={true} // Evitar la indexación
                 structuredData={{
                     '@context': 'https://schema.org',
@@ -19,11 +21,11 @@ const ChangePassword = () => {
                     name: 'Cambiar Contraseña - Oiches',
                     description:
                         'Página para cambiar tu contraseña de acceso en Oiches. Sigue los pasos para restablecerla.',
-                    url: 'https://oiches.com/change-password',
+                    url: `${appBaseUrl}/change-password`, // URL con variable de entorno
                     isPartOf: {
                         '@type': 'WebSite',
                         name: 'Oiches',
-                        url: 'https://oiches.com',
+                        url: appBaseUrl, // URL con variable de entorno
                     },
                 }}
             />

@@ -5,13 +5,15 @@ import Footer from '../../components/Footer';
 import Seo from '../../components/SEO/Seo';
 
 const CreacionGrupo = () => {
+    const appBaseUrl = import.meta.env.VITE_APP_URL || 'https://oiches.com';
+
     return (
         <>
             {/* SEO creación de grupo */}
             <Seo
                 title="Publica tu Proyecto Musical - Oiches"
                 description="Crea y publica tu proyecto musical en Oiches para conectar con salas de conciertos y promocionar tu música."
-                url="https://oiches.com/creacion-grupo"
+                url="/creacion-grupo"
                 noIndex={true} // Evitamos la indexación de esta página
                 structuredData={{
                     '@context': 'https://schema.org',
@@ -19,16 +21,16 @@ const CreacionGrupo = () => {
                     name: 'Publica tu Proyecto Musical - Oiches',
                     description:
                         'Crea y publica tu proyecto musical en Oiches para conectar con salas de conciertos y promocionar tu música.',
-                    url: 'https://oiches.com/creacion-grupo',
+                    url: `${appBaseUrl}/creacion-grupo`,
                     isPartOf: {
                         '@type': 'WebSite',
                         name: 'Oiches',
-                        url: 'https://oiches.com',
+                        url: appBaseUrl,
                     },
                     potentialAction: {
                         '@type': 'CreateAction',
                         name: 'Crear un proyecto musical',
-                        target: 'https://oiches.com/creacion-grupo',
+                        target: `${appBaseUrl}/creacion-grupo`,
                     },
                 }}
             />

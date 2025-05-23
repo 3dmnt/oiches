@@ -5,13 +5,15 @@ import Footer from '../../components/Footer';
 import Seo from '../../components/SEO/Seo';
 
 const EdicionGrupo = () => {
+    const appBaseUrl = import.meta.env.VITE_APP_URL || 'https://oiches.com';
+
     return (
         <>
             {/* SEO para la página de edición de grupo */}
             <Seo
                 title="Edita tu Proyecto Musical - Oiches"
                 description="Edita y actualiza los detalles de tu proyecto musical en Oiches. Cambia la información de tu banda o proyecto."
-                url="https://oiches.com/edicion-grupo"
+                url="/edicion-grupo" // URL relativa
                 noIndex={true} // Evitamos que sea indexada no tiene valor en cuento a Seo se evita Bots maliciosos
                 structuredData={{
                     '@context': 'https://schema.org',
@@ -19,7 +21,7 @@ const EdicionGrupo = () => {
                     name: 'Edita tu Proyecto Musical - Oiches',
                     description:
                         'Edita y actualiza los detalles de tu proyecto musical en Oiches.',
-                    url: 'https://oiches.com/edicion-grupo',
+                    url: `${appBaseUrl}/edicion-grupo`, // URL con variable de entorno
                 }}
             />
 

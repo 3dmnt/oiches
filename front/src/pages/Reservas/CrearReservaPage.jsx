@@ -41,6 +41,9 @@ export const CrearReservaPage = () => {
             : entry.usuarioAvatar
             ? `${VITE_API_URL_BASE}/uploads/${entry.usuarioAvatar}`
             : noImage;
+            
+    // URL base de la aplicación para SEO
+    const appBaseUrl = import.meta.env.VITE_APP_URL || 'https://testoiches.es';
 
     return (
         <>
@@ -48,7 +51,7 @@ export const CrearReservaPage = () => {
             <Seo
                 title={`Reserva en ${entry.nombre} - Oiches`}
                 description={`Reserva un espacio en la sala ${entry.nombre}, ubicada en ${entry.direccion}. Conoce sus horarios y géneros musicales.`}
-                url={`https://oiches.com/crear-reserva/${idSala}`}
+                url={`${appBaseUrl}/crear-reserva/${idSala}`}
                 image={imageUrl}
                 noIndex={true}
                 structuredData={{

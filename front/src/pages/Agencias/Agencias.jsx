@@ -45,8 +45,8 @@ const Agencias = () => {
                 title="Oiches | Encuentra managers y agencias musicales"
                 description="Explora y contacta directamente con las mejores agencias y manager a través de Oiches."
                 keywords="agencias musicales, managers, música en vivo, reservas de salas, eventos musicales, donde tocar, conciertos en vivo"
-                url="https://oiches.com/agencias"
-                image="https://oiches.com/Oiches-Conectamos-musicos-y-salasRRSS.jpg"
+                url="/agencias"
+                image="/Oiches-Conectamos-musicos-y-salasRRSS.jpg"
                 type="website"
                 imageType="image/jpg"
                 structuredData={{
@@ -56,7 +56,7 @@ const Agencias = () => {
                         '@type': 'ListItem',
                         position: index + 1,
                         name: agencia.nombre,
-                        url: `https://oiches.com/agencia/${agencia.id}`,
+                        url: `/agencia/${agencia.id}`,
                     })),
                 }}
             />
